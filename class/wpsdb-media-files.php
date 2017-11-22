@@ -148,7 +148,13 @@ class WPSDB_Media_Files extends WPSDB_Addon {
 
 		foreach( $files as $name => $object ){
 			$name = str_replace( array( $upload_dir . DS, '\\' ), array( '', '/' ), $name );
-			$local_media[$name] = $object->getSize();
+			try {
+                $local_media[$name] = $object->getSize();
+            } catch (RuntimeException $exception) {
+			    //if you don't have access to it don't add it to local-media
+			    continue;
+            }
+
 		}
 
 		return $local_media;
